@@ -1,9 +1,19 @@
 --lib
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local colors = {
+	GUIColor = Color3.fromRGB(0,255,255),
+	Background = Color3.fromRGB(0, 0, 0),
+	Header = Color3.fromRGB(0, 0, 0),
+	TextColor = Color3.fromRGB(255,255,255),
+	ElementColor = Color3.fromRGB(20, 20, 20),
+	ButtonText = Color3.fromRGB(255,255,255)
+}
+
 --vars
 local toggleState = false
 local SelectedCar = 1
 local tMusic = false
+local MusicIDnumber = 0
 
 --functions
 local function SpawnCar(SelectedCar)
@@ -39,18 +49,17 @@ local function SetRimsColor(RimsColor)
 	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Car"):WaitForChild("Customize"):FireServer(unpack(args))
 end
 
-local function SetMusicID(MusicIDnumber)
+local function RunMusic(tMusic, MusicIDnumber)
 	local args = {
-		[1] = true,
-		[2] = "903981988923"
+		[1] = tMusic,
+		[2] = MusicIDnumber
 	}
-
 	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Car"):WaitForChild("Music"):InvokeServer(unpack(args))
-
 end
 
 --Window
-local Window = Library.CreateLib("BackstretchGUI v0.1", "Serpent")
+local Window = Library.CreateLib("BackstretchGUI v0.2", colors)
+
 
 --Tabs
 local CarSpawnTab = Window:NewTab("Car Spawn")
@@ -64,22 +73,8 @@ local CarDropDown = CarSpawnTab:NewSection("Car Drop Down Menu")
 local Underglow = CustomizeTab:NewSection("Underglow Settings")
 local RimColor = CustomizeTab:NewSection("Rim Color Settings")
 local Music = MusicTab:NewSection("Music Settings")
-
---TextBoxes
-CarSpawner:NewTextBox("Car Selector", "Input your desired car ID", function(SelectedCar)
-	local SelectedCarString = SelectedCar
-	local SelectedCarNumber = tonumber(SelectedCarString) 
-	print(SelectedCarNumber)
-	SpawnCar(SelectedCarNumber)
-end)
-Music:NewTextBox("Music ID Input", "Input your desired music ID", function(MusicID)
-	local MusicIDString = MusicID
-	local MusicIDnumber = tonumber(MusicIDString) 
-	print(MusicIDnumber)
-	MusicSet(MusicIDnumber)
-end)
-
---Buttons
+local Credits = CreditsTab:NewSection("Credits")
+local CustomTheme = CreditsTab:NewSection("Theme Customizer")
 
 --Toggles
 Underglow:NewToggle("Underglow Toggle", "Enable/Disable underglow", function(state)
@@ -98,11 +93,31 @@ Music:NewToggle("Music Toggle", "Enable/Disable music", function(state1)
 	if state1 then
 		tMusic = true
 		print("Music Playing!")
+		RunMusic(tMusic, MusicIDnumber)
 	else
 		tMusic = false
 		print("Music Paused!")
 	end
 end)
+
+--TextBoxes
+CarSpawner:NewTextBox("Car Selector", "Input your desired car ID", function(SelectedCar)
+	local SelectedCarString = SelectedCar
+	local SelectedCarNumber = tonumber(SelectedCarString) 
+	print(SelectedCarNumber)
+	SpawnCar(SelectedCarNumber)
+end)
+Music:NewTextBox("Music ID Input", "Input your desired music ID", function(MusicID)
+	MusicID = MusicID
+	local MusicIDString = MusicID
+	local MusicIDnumber = tonumber(MusicIDString) 
+	print(MusicIDnumber)
+	RunMusic(tMusic, MusicIDnumber)
+end)
+
+--Buttons
+
+
 
 --Color Pickers
 Underglow:NewColorPicker("Underglow Color", "Select the color of your underglow", Color3.fromRGB(255,255,255), function(UnderglowColor)
@@ -116,3 +131,10 @@ RimColor:NewColorPicker("Rims Color", "Select the color of your rims", Color3.fr
 	wait(.001)
 	print(RimsColor)
 end)
+
+--Custom Theme
+for theme, color in pairs(colors) do
+	CustomTheme:NewColorPicker(theme, "Change your "..theme, color, function(color3)
+		Library:ChangeColor(theme, color3)
+	end)
+end
