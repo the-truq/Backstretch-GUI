@@ -1,12 +1,11 @@
 --lib
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local colors = {
-	GUIColor = Color3.fromRGB(0,255,255),
-	Background = Color3.fromRGB(0, 0, 0),
-	Header = Color3.fromRGB(0, 0, 0),
+	Background = Color3.fromRGB(20, 20, 20),
+	Header = Color3.fromRGB(20, 20, 20),
 	TextColor = Color3.fromRGB(255,255,255),
 	ElementColor = Color3.fromRGB(20, 20, 20),
-	ButtonText = Color3.fromRGB(255,255,255)
+	SchemeColor = Color3.fromRGB(50,50,200)
 }
 
 --vars
